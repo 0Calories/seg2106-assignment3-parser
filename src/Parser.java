@@ -19,7 +19,7 @@ public class Parser {
 		
 		token = getNextToken();
 		
-		if (program() == ERROR || token != "$") {
+		if (program() == ERROR || !token.equals("$")) {
 			System.out.println("ERROR: The code contains a syntax mistake.");
 		} else {
 			System.out.println("SUCCESS: The code has been successfully parsed.");
@@ -31,8 +31,11 @@ public class Parser {
 		System.out.println("program()");
 		if (token.equals("begin")) {
 			token = getNextToken();
-			if (statement_list() == ERROR) return ERROR;
+			if (statement_list() == ERROR) {System.out.println("program error");return ERROR;}
+			System.out.println("passed statement list block");
+			System.out.println("current token " + token);
 			if (token.equals("end")) {
+				token = getNextToken();
 				return OK;
 			}
 		}
@@ -43,21 +46,22 @@ public class Parser {
 	private static int statement_list() {
 		System.out.println("statement_list()");
 		if (statement() == ERROR) return ERROR;
-		token = getNextToken();
 		
 		if (token.equals(";")) {
 			token = getNextToken();
 			return statement_list_prime();
+		} else {
+			return ERROR; 	
 		}
-		
-		return ERROR; 
 		
 	}
 	
 	private static int statement_list_prime() {
 		System.out.println("statement_list_prime()");
-		if (statement_list() == ERROR) return ERROR;
 		
+		// Since in the grammar, either <statement_list> can be called, or epsilon, this production will return OK either way.
+		// Otherwise, the very last statement will be counted as an error.
+		statement_list();
 		return OK;
 		
 	}
@@ -71,7 +75,6 @@ public class Parser {
 				return expression();
 			}
 		}
-		
 		return ERROR;
 		
 	}
@@ -114,8 +117,8 @@ public class Parser {
 	
 	private static String getNextToken() {
 		try {
+			System.out.println(token);
 			String newLine = reader.readLine();
-			System.out.println(newLine);
 			return newLine;
 		} catch (IOException e) {
 			e.printStackTrace();

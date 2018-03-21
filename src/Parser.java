@@ -28,11 +28,11 @@ public class Parser {
 	}
 	
 	private static int program() {
-		
-		if (token == "begin") {
+		System.out.println("program()");
+		if (token.equals("begin")) {
 			token = getNextToken();
 			if (statement_list() == ERROR) return ERROR;
-			if (token == "end") {
+			if (token.equals("end")) {
 				return OK;
 			}
 		}
@@ -41,11 +41,11 @@ public class Parser {
 	}
 	
 	private static int statement_list() {
-		
+		System.out.println("statement_list()");
 		if (statement() == ERROR) return ERROR;
 		token = getNextToken();
 		
-		if (token == ";") {
+		if (token.equals(";")) {
 			token = getNextToken();
 			return statement_list_prime();
 		}
@@ -55,7 +55,7 @@ public class Parser {
 	}
 	
 	private static int statement_list_prime() {
-		
+		System.out.println("statement_list_prime()");
 		if (statement_list() == ERROR) return ERROR;
 		
 		return OK;
@@ -63,11 +63,11 @@ public class Parser {
 	}
 	
 	private static int statement() {
-		
-		if (token == "id") {
+		System.out.println("statement()");
+		if (token.equals("id")) {
 			token = getNextToken();
-			if (token == "=") {
-				if (expression() == ERROR) return ERROR;
+			if (token.equals("=")) {
+				token = getNextToken();
 				return expression();
 			}
 		}
@@ -77,19 +77,42 @@ public class Parser {
 	}
 	
 	private static int expression() {
-		return 0;
+		System.out.println("expression()");
+		if (factor() == ERROR) return ERROR;
+		
+		return expression_prime();
+		
 	}
 	
 	private static int expression_prime() {
-		return 0;
+		System.out.println("expression_prime()");
+		if (token.equals("+")) {
+			token = getNextToken();
+			return factor();
+		} else if (token.equals("-")) {
+			token = getNextToken();
+			return factor();
+		} else {
+			return OK;
+		}
+		
 	}
 	
 	private static int factor() {
-		return 0;
+		System.out.println("factor()");
+		if (token.equals("id")) {
+			token = getNextToken();
+			return OK;
+		} else if (token.equals("num")) {
+			token = getNextToken();
+			return OK;
+		} else {
+			return ERROR;
+		}
+		
 	}
 	
 	private static String getNextToken() {
-		
 		try {
 			String newLine = reader.readLine();
 			System.out.println(newLine);

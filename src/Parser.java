@@ -28,12 +28,10 @@ public class Parser {
 	}
 	
 	private static int program() {
-		System.out.println("program()");
+
 		if (token.equals("begin")) {
 			token = getNextToken();
-			if (statement_list() == ERROR) {System.out.println("program error");return ERROR;}
-			System.out.println("passed statement list block");
-			System.out.println("current token " + token);
+			if (statement_list() == ERROR) return ERROR;
 			if (token.equals("end")) {
 				token = getNextToken();
 				return OK;
@@ -44,7 +42,7 @@ public class Parser {
 	}
 	
 	private static int statement_list() {
-		System.out.println("statement_list()");
+
 		if (statement() == ERROR) return ERROR;
 		
 		if (token.equals(";")) {
@@ -56,9 +54,7 @@ public class Parser {
 		
 	}
 	
-	private static int statement_list_prime() {
-		System.out.println("statement_list_prime()");
-		
+	private static int statement_list_prime() {		
 		// Since in the grammar, either <statement_list> can be called, or epsilon, this production will return OK either way.
 		// Otherwise, the very last statement will be counted as an error.
 		statement_list();
@@ -67,7 +63,7 @@ public class Parser {
 	}
 	
 	private static int statement() {
-		System.out.println("statement()");
+
 		if (token.equals("id")) {
 			token = getNextToken();
 			if (token.equals("=")) {
@@ -80,7 +76,7 @@ public class Parser {
 	}
 	
 	private static int expression() {
-		System.out.println("expression()");
+
 		if (factor() == ERROR) return ERROR;
 		
 		return expression_prime();
@@ -88,7 +84,7 @@ public class Parser {
 	}
 	
 	private static int expression_prime() {
-		System.out.println("expression_prime()");
+
 		if (token.equals("+")) {
 			token = getNextToken();
 			return factor();
@@ -102,7 +98,7 @@ public class Parser {
 	}
 	
 	private static int factor() {
-		System.out.println("factor()");
+
 		if (token.equals("id")) {
 			token = getNextToken();
 			return OK;
@@ -117,9 +113,7 @@ public class Parser {
 	
 	private static String getNextToken() {
 		try {
-			System.out.println(token);
-			String newLine = reader.readLine();
-			return newLine;
+			return reader.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
